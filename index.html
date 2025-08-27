@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/normalize.css">
+    <link rel="stylesheet" href="./css/styles.css">
+    <!-- Add script tag -->
+    <script src="./js/scripts.js" defer></script>
+    <title>My Personal Portfolio</title>
+</head>
+
+<body>
+    <header>
+        <h1>Insert your name here</h1>
+        <nav>
+            <ul>
+                <a href='#aboutMeContainer'>
+                    <li>About</li>
+                </a>
+                <a href='#projectsContainer'>
+                    <li>Projects</li>
+                </a>
+                <a href='#contactContainer'>
+                    <li>Contact</li>
+                </a>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="aboutMeContainer" >
+            <h2>About Me</h2>
+            <div id="aboutMe">
+                <!-- populate with data: 2 children -->
+                <!-- need to add <p> with bio -->
+                <!-- need to add <div> with class of 'headshotContainer' with an <img> child -->
+            </div>
+
+        </section>
+        <section id="projectsContainer">
+            <h2>Projects</h2>
+            <div id="projectSection">
+                    
+                <sidebar id="projectList">
+
+                    <!-- populate with data -->
+                    <!-- each project should be a <div> with a class of 'projectCard' -->
+                    <!-- each <div> should have an id attribute equal to the project_id -->
+                    <!-- each <div> should have a background set to the card_image value and aligned correctly -->
+                    <!-- each <div> should have the name and the short_description -->
+
+                </sidebar>
+                <div id="projectNavArrows">
+                    <!-- You must create javascript to scroll the projectList element. Scrollbars have been removed in the CSS but you can enable them again by commenting out code until your js is complete -->
+                    <!-- This site is responsive and so are the arrows. Design is set up as mobile-first -->
+                    <!-- at mobile sizes they move left and right -->
+                    <!-- at desktop sizes the same buttons move up and down -->
+                    <span class="arrow-left"></span>
+                    <span class="arrow-right"></span>
+                </div>
+
+                <div id="projectSpotlight">
+                    <!-- remember the background image for this section -->
+
+                    <div id="spotlightTitles">
+                        <!-- populate with default data -->
+                        <!-- defult data should be the first record in the projectsData.json file -->
+                        <!-- populate with the project_name and the long_description-->
+                        <!-- add an external link  -->
+
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="contactContainer">
+            <!-- create client-side validation to check and make sure the fields aren't empty and no illegal characters are included -->
+            <!-- the email input has been set with a type of 'text' instead of 'email' in order to bypass the browser checks and use your js checks for formatting -->
+            <!-- email regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/ -->
+            <!-- invalid character regex = /[^a-zA-Z0-9@._-]/ -->
+            <!-- maxLength attribute removed from textArea so you can use your js to check -->
+            <!-- make sure you update the charactersLeft div with the current character count -->
+            <!-- populate the emailError and messageError divs with information explaining to the user why validation failed and how to fix it -->
+            <h2>Contact Me</h2>
+            <p>Send me your email address and a message and I'll get back to you as soon as possible.</p>
+            <form id="formSection">
+                <div class='formField'>
+
+                    <label for='contactEmail'>Your email address:</label>
+                    <input id='contactEmail' name='contactEmail' type="text" />
+                    <div id="emailError"></div>
+
+                </div>
+                <div class='formField'>
+ 
+                    <label for='contactMessage'>Your message:</label>
+                    <div>
+                        <div id="charactersLeft">Characters: 0/300</div>
+                        <textarea id='contactMessage' name="contactMessage" rows="5"></textarea>
+                        <div id="messageError"></div>
+
+                    </div>
+                </div>
+                <button id='formsubmit' type="submit">Submit</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+
+    </footer>
+</body>
+
+</html>

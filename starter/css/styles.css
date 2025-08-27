@@ -1,0 +1,400 @@
+:root {
+    --lightBG:#fff8f3;
+    --onLightBG:#201b13;
+    --success:#4e6542;
+    --onSuccess:#ffffff;
+    --error:#ba1a1a;
+    --onError:#ffffff;
+    --titleBackground:rgba(228, 216, 204, .7);
+}
+
+body {
+    width: 100dvw;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color:var(--lightBG);
+    color:var(--onLightBG);
+}
+
+button {
+    border-radius:10px;
+    padding:10px;
+    transition:all .3s;
+}
+
+button:hover {
+    background-color: var(--success);
+    color:var(--onSuccess);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--onLightBG);
+
+    & h1 {
+        padding: 0 0 0 20px;
+    }
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+main {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+nav {
+    padding: 0 20px 0 0;
+    margin: 0 20px 0 0;
+    width: 30%;
+    display: flex;
+    flex: 0 0 auto;
+    justify-content: flex-end;
+
+    & a {
+        text-decoration: none;
+    }
+
+    & ul {
+        list-style-type: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        font-size: .8rem;
+        gap: 5px;
+        width: 50%;
+        margin: 0;
+        padding: 0;
+
+        & li {
+            transition: all .3s;
+            cursor: pointer;
+        }
+
+        & li:hover {
+            scale: 1.1;
+        }
+    }
+}
+
+#aboutMeContainer {
+    margin: 0 0 50px 0;
+    padding: 20px 0 0 0;
+
+    & h2,
+    & p {
+        padding: 0 20px 0 20px;
+    }
+}
+
+#aboutMe {
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    align-items: center;
+    gap:20px;
+
+    & p {
+        width:100%
+    }
+
+
+}
+
+#charactersLeft {
+    font-size:.6rem;
+    font-style: italic;
+    font-weight: 100;
+    line-height: 1rem;
+}
+
+#contactContainer {
+
+    margin: 50px 0 50px 0;
+    padding: 0 20px 0 20px;
+
+}
+
+#formSection {
+    display:flex;
+    flex-direction:column;
+    align-items: center;
+
+    & button {
+        align-self: flex-start;
+    }
+}
+
+#messageError, #emailError {
+    color:var(--error);
+
+}
+
+#projectsContainer {
+    margin: 50px 0 50px 0;
+    padding: 20px 0 0 0;
+
+
+    & h2 {
+        padding: 0 20px 0 20px;
+    }
+}
+
+#projectList {
+    display: flex;
+    width: 100%;
+    overflow-x: auto;
+    gap: 20px;
+    padding: 0 40px 0 20px;
+    scroll-behavior: smooth;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+}
+
+#projectNavArrows {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin: 20px 0;
+    flex: 0 0 auto;
+}
+
+#projectSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin:20px 0 0 0 ;
+}
+
+#projectSpotlight {
+    margin: 10px 0;
+    width: 90%;
+    height: 600px;
+    border-radius: 10px;
+}
+
+
+#spotlightTitles {
+    width: 100%;
+    background: var(--titleBackground);
+    padding: 20px 20px 20px 20px;
+
+    & h3 {
+        margin: 0;
+
+    }
+}
+
+.active {
+    opacity: 1;
+}
+
+.headshotContainer {
+    width:100%;
+
+    & img {
+        width:100%;
+        height:auto;
+        object-fit: cover;
+    }
+}
+
+.inactive {
+    opacity: .5;
+}
+
+.arrow-right,
+.arrow-left {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.arrow-right::before {
+    content: '';
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 20px solid var(--onLightBG);
+    margin-left: 5px;
+}
+
+.arrow-left::before {
+    content: '';
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 20px solid var(--onLightBG);
+    margin-right: 5px;
+}
+
+.formField {
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    margin:10px 0;
+    width:100%;
+
+    & label {       
+        
+        padding:0 10px 0 0;
+    } 
+
+    & input {
+        width:300px;
+    }
+
+    & textarea {
+        width:300px;
+    }
+}
+
+.messageContainer {
+    width:300px;
+}
+
+
+.projectCard {
+    position: relative;
+    flex: 0 0 auto;
+    width: 200px;
+    height: 200px;
+    border: 2px solid var(--onLightBG);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all .3s;
+    cursor: pointer;
+    filter: grayscale();
+
+    & h4 {
+        width: 100%;
+        background: rgba(255, 255, 255, .5);
+        margin: 0;
+        padding: 10px;
+        min-height: 35%;
+    }
+
+    & p {
+        color: transparent;
+        padding: 0 10px;
+        font-weight: bold;
+    }
+}
+
+.projectCard:hover {
+    color: var(--lightBG);
+    filter: none;
+
+    & h4 {
+        background: rgba(0, 0, 0, .5);
+        ;
+    }
+
+    & p {
+        color: var(--lightBG);
+        text-shadow: 2px 2px 3px var(--onLightBG);
+        
+
+    }
+
+}
+
+
+
+
+@media (width >=1024px) {
+    nav {
+        width: 40%;
+
+        & ul {
+            font-size: 1rem;
+            flex-direction: row;
+            justify-content: flex-end;
+            gap: 20px;
+            width: 100%;
+        }
+    }
+
+    #projectNavArrows {
+        flex-direction: column;
+        width: 75px;
+    }
+
+    #projectSection {
+        flex-direction: row;
+        height: 50dvh;
+    }
+
+    #projectSpotlight {
+        width:70%;
+    }
+
+    #projectList {
+        flex-direction: column;
+        height: 100%;
+        overflow: auto;
+        padding: 0 0 0 20px;
+        width: 250px;
+        align-items: center;
+    }
+
+    .arrow-left {
+        transform: rotate(90deg);
+    }
+
+    .arrow-right {
+        transform: rotate(90deg);
+    }
+}
+
+@media (width >= 768px){
+    #aboutMe {
+        flex-direction:row;
+        align-items: flex-start;
+
+        & p {
+            width:60%;
+        }
+    }
+
+    .formField {
+        justify-content: center;
+    }
+
+    .headshotContainer {
+        width:30%;
+        max-width:600px;
+    }
+}
+
+/* Hide scrollbar for WebKit browsers (Chrome, Safari) on mobile devices */
+@media (width <=768px) {
+    body::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for other browsers on mobile devices */
+    body {
+        -ms-overflow-style: none;
+        /* IE and Edge */
+        /* scrollbar-width: none;   */
+    }
+
+    
+}
