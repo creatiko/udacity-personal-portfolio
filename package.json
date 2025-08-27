@@ -1,0 +1,14 @@
+{
+  "name": "shopping-cart-project",
+  "version": "1.0.0",
+  "description": "shopping cart project with tests",
+  "main": "index.js",
+  "scripts": {
+    "start": "live-server --port=3000 starter"
+  },
+  "author": "Luis Carlos Ordonez",
+  "license": "SEE LICENSE IN LICENSE.txt",
+  "dependencies": {
+    "live-server": "^1.2.1"
+  }
+}
