@@ -1,20 +1,28 @@
-// use fetch to retrieve aboutme.json
-fetch('../data/aboutme.json')
-    .then(response => response.json())
-    .then(data => {
-        console.log(data.aboutMe);
-        console.log(data.headshot);
+// use fetch to retrieve about me data
 
-        // Insert into DOM
+
+const fetchUserData = async () => {
+    try {
+        const responseData = await fetch('./data/aboutMeData.json');
+        if (!responseData.ok) {
+            throw new Error(`Error fetching data: ${responseData.status}, ${responseData.statusText}`);
+        } 
+        const userData = await responseData.json(); 
         const aboutContainer = document.getElementById("aboutMe");
-        // create p element
-        const bioContainer = "p";
-        bioContainer.textContent = data.aboutMe;
-        // create div element
-        const headshotContainer = "div";
-        headshotContainer.classlist.add('headshotContainer');
-        // create img element
-        const headshotImage = "img";
-        headshotImage.src = data.headshot;
-    })
-    .catch(error => console.error("Error loading JSON:", error));
+        const bioContainer = document.createElement('p'); // create p element
+        bioContainer.textContent = userData.aboutMe; // populate p element
+        const headshotContainer = document.createElement('div'); // create div element
+        headshotContainer.classList.add('headshotContainer'); // add class to div element
+        const headshotImage = document.createElement('img'); // create img element
+        headshotImage.src = userData.headshot; // populate the img
+        headshotContainer.append(headshotImage); // add it to the div
+        const aboutDocumentFragment = document.createDocumentFragment(); // create fragment
+        aboutDocumentFragment.append(bioContainer, headshotContainer); // add the p and the div
+        aboutContainer.append(aboutDocumentFragment); // add fragment to the about container
+        
+    } catch (error) {
+        console.error("Error loading JSON:", error);
+    }
+}
+
+fetchUserData();
