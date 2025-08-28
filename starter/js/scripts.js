@@ -1,3 +1,7 @@
+// Come on, I WILL insert my name there
+const myName = document.querySelector('header h1');
+myName.textContent = "Luis Carlos Ordonez";
+
 // use fetch to retrieve about me data
 const fetchUserData = async () => {
     try {
@@ -31,7 +35,7 @@ const spotlightTitles = document.getElementById('spotlightTitles');
 const spotlightTitlesH3 = document.createElement('h3');
 const spotlightText = document.createElement('p');
 const spotlightLink = document.createElement('a');
-spotlightLink.innerHTML = "Click here to see more...";
+spotlightLink.textContent = "Click here to see more...";
 spotlightLink.setAttribute('title', 'Click here to see more...');
 
 // create empty array to hold the projects this will serve to populate the spotlight switch statement.
@@ -226,11 +230,24 @@ const illegalChars = /[^a-zA-Z0-9@._\- ]/; // provided regex wasn't allowing spa
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const maxMessageLength = 300;
 
-// event handler to keep the character count
 messageInput.addEventListener('input', () => {
-    const length = messageInput.value.length;
-    charactersLeft.textContent = `Characters: ${length}/${maxMessageLength}`; // change the number as it inputs
+    let value = messageInput.value;
+    // Check if the value exceeds max length
+    if (value.length > maxMessageLength) {
+        // Stop input except delete/backspace
+        messageInput.value = value.substring(0, maxMessageLength);
+        messageError.textContent = `Message cannot exceed ${maxMessageLength} characters.`;
+        messageInput.style.borderColor = "red";
+        messageLabel.style.color = "red";
+    } else {
+        // Clear error when within limit
+        messageError.textContent = "";
+        messageInput.style.borderColor = "";
+        messageLabel.style.color = "";
+    }
+    charactersLeft.textContent = `Characters: ${messageInput.value.length}/${maxMessageLength}`; // change the number as it inputs
 });
+
 
 function validateForm() {
     let isValid = true;
