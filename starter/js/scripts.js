@@ -1,6 +1,4 @@
 // use fetch to retrieve about me data
-
-
 const fetchUserData = async () => {
     try {
         const responseData = await fetch('./data/aboutMeData.json');
@@ -14,7 +12,7 @@ const fetchUserData = async () => {
         const headshotContainer = document.createElement('div'); // create div element
         headshotContainer.classList.add('headshotContainer'); // add class to div element
         const headshotImage = document.createElement('img'); // create img element
-        headshotImage.setAttribute('src', userData.headshot2); // populate the img
+        headshotImage.setAttribute('src', userData.headshot); // populate the img
         headshotImage.setAttribute('alt', 'Picture of the author'); // Set the alt text
         headshotContainer.append(headshotImage); // add it to the div
         const aboutDocumentFragment = document.createDocumentFragment(); // create fragment
@@ -26,88 +24,158 @@ const fetchUserData = async () => {
     }
 }
 
-fetchUserData();
+const projectsContainer = document.getElementById('projectList');
+const spotlightContainer = document.getElementById('projectSpotlight');
+const spotlightTitles = document.getElementById('spotlightTitles');
+// create elements for inside spotlightContainer
+const spotlightTitlesH3 = document.createElement('h3');
+const spotlightText = document.createElement('p');
+const spotlightLink = document.createElement('a');
+spotlightLink.innerHTML = "Click here to see more...";
+spotlightLink.setAttribute('title', 'Click here to see more...');
 
-const projectsContainer = document.getElementById("projectList"); // Main outside projects <sidebar>
+// create empty array to hold the projects this will serve to populate the spotlight switch statement.
+const projectsArray = [];
 
-const fetchProjectsData = async () => {
+async function fetchProjectsData() {
     try {
-        const responseData = await fetch('./data/projectsData.json');
-        if (!responseData.ok) {
-            throw new Error(`Error fetching data: ${responseData.status}, ${responseData.statusText}`);
-        }
-        const projectsData = await responseData.json();
-        console.log(projectsData);
-        // Loop through each project
+        const response = await fetch('./data/projectsData.json');
+        if (!response.ok) throw new Error(`Error fetching data: ${response.status}`);
+
+        const projectsData = await response.json();
+
         projectsData.forEach(project => {
-            const projectCard = document.createElement('div'); // create div element
-            projectCard.classList.add('projectCard');
-            projectCard.setAttribute('id', project.project_id); // give each div an id that matches the project_id
-            project.card_image ?? (project.card_image = project.spotlight_image);
-            projectCard.style.cssText = `background-image: url(/images/${project.card_image}); background-repeat: no-repeat; background-position: top center; background-size: cover; scroll-snap-align: start; `;
-            // I know they probably want me to use nullish coalescence like project.short_description ?? "Project description not available" but I like this better.
-            if (project.short_description == undefined){
-                // if the short description is missing lets use the long description cut it off with substring but lets not have a word cut off in the middle. so we loop the string until we find a space et voila!
-                if (project.long_description !== undefined) {
-                    const maxLength = () => {
-                        const longString = project.long_description;
-                        let index = 30;
-                        // Loop forward until we find a space or reach the end
-                        while (index < longString.length && longString[index] !== " ") {
-                            index++;
-                        }
-                        return index; 
-                    };
-                    project.short_description = `${project.long_description.substring(0, maxLength())}&hellip;`;
-                }
-                else {
-                    project.short_description = "Project description not available"
+            // Normalize images
+            const cardImage = project.card_image ?? project.spotlight_image ?? "../images/default_card.webp";
+            const spotlightImage = project.spotlight_image ?? cardImage;
+
+            // Short description
+            let shortDesc = project.short_description;
+            if (!shortDesc) {
+                if (project.long_description) {
+                    let index = 30;
+                    while (index < project.long_description.length && project.long_description[index] !== " ") {
+                        index++;
+                    }
+                    shortDesc = `${project.long_description.substring(0, index)}&hellip;`;
+                } else {
+                    shortDesc = "Project description not available";
                 }
             }
+
+            // Create card
+            const projectCard = document.createElement('div');
+            projectCard.classList.add('projectCard');
+            projectCard.setAttribute('id', project.project_id);
+            projectCard.style.cssText = `
+                background-image: url(${cardImage});
+                background-repeat: no-repeat;
+                background-position: top center;
+                background-size: cover;
+                scroll-snap-align: start;
+            `;
             projectCard.innerHTML = `
-                    <h4>${project.project_name}</h4>
-                    <p>${project.short_description}</p>
-                `;
-            projectsContainer.append(projectCard);
+                <h4>${project.project_name}</h4>
+                <p>${shortDesc}</p>
+            `;
+            projectsContainer.appendChild(projectCard);
+
+            // Push into projectsArray
+            projectsArray.push({
+                project_id: project.project_id,
+                project_name: project.project_name,
+                short_description: shortDesc,
+                long_description: project.long_description ?? shortDesc ?? "",
+                card_image: cardImage,
+                spotlight_image: spotlightImage,
+                url: project.url ?? "#"
+            });
+
+            // event listener for each card // To Do: not anonymous function, does it need to be removed?
+            projectCard.addEventListener("click", () => populateSpotlight(project.project_id));
         });
+
+        // call the function to populate the spotlight section
+        populateSpotlight();
+
     } catch (error) {
         console.error("Error loading JSON:", error);
     }
 }
 
-fetchProjectsData();
+// Populate spotlight function
+function populateSpotlight(project_id) {
+    // removed switch and used if statements seemed cleaner.
+    let project;
+    if (project_id) project = projectsArray.find(p => p.project_id === project_id);
+    // no project id is called since none are clicked yet
+    if (!project) {
+        project = projectsArray[0];
+    }
+    // Something went totally wrong with the data.
+    if (!project) {
+        console.error("No project data found in projectsArray at all!");
+        return;
+    }
+
+    // Update spotlight DOM
+    spotlightTitlesH3.textContent = project.project_name;
+    spotlightText.textContent = project.long_description || project.short_description || "";
+    spotlightLink.href = project.url || "#";
+    //clear the spotlightContainer and spotLightTitles before re-populating
+    spotlightTitles.innerHTML = "";
+    spotlightContainer.style.cssText = '';
+    // now repopulate them
+    spotlightContainer.style.cssText = `
+                background-color: #336699;
+                background-image: url(${project.spotlight_image ?? project.card_image});
+                background-repeat: no-repeat;
+                background-position: top center;
+                background-size: cover;
+                scroll-snap-align: start;
+            `;
+    spotlightLink.target = "_blank"; // Should it be blank? yes for this project due to the example.com otherwise not really.
+    spotlightTitles.appendChild(spotlightTitlesH3);
+    spotlightTitles.appendChild(spotlightText);
+    spotlightTitles.appendChild(spotlightLink);
+}
+
 
 document.addEventListener("DOMContentLoaded", () => {
+    // Scroll handler 
     const projectList = document.getElementById("projectList");
     const arrowLeft = document.querySelector(".arrow-left");
     const arrowRight = document.querySelector(".arrow-right");
-
-    const scrollAmount = 200; // My thought is this needs to match the card width/height no need to change for mobile or desktop since both w and h are 200px;
-
-    // function to detect if desktop or mobile
-    const isDesktop = () => window.innerWidth >= 1024; // I'm matching the media query used in styles.css
+    const scrollAmount = 200;
+    const desktopQuery = window.matchMedia("(min-width: 1024px)");
 
     const scrollHandler = (direction) => {
-        if (isDesktop()) {
-            projectsContainer.style.cssText = 'scroll-snap-type: y mandatory;'; // I like the cards to snap this is working on desktop
-            // Desktop → vertical scroll
-            if (direction === "left") {
-                projectList.scrollBy({ top: -scrollAmount, behavior: "smooth" });
-            } else {
-                projectList.scrollBy({ top: scrollAmount, behavior: "smooth" });
-            }
+        if (desktopQuery.matches) {
+            projectList.style.scrollSnapType = 'y mandatory';
+            projectList.scrollBy({ top: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
         } else {
-            projectsContainer.style.cssText = 'scroll-snap-type: x mandatory;'; // I like the cards to snap this is working on mobile
-            // Mobile → horizontal scroll
-            if (direction === "left") {
-                projectList.scrollBy({ left: -scrollAmount, behavior: "smooth" });
-            } else {
-                projectList.scrollBy({ left: scrollAmount, behavior: "smooth" });
-            }
+            projectList.style.scrollSnapType = 'x mandatory';
+            projectList.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
         }
     };
 
     arrowLeft.addEventListener("click", () => scrollHandler("left"));
     arrowRight.addEventListener("click", () => scrollHandler("right"));
 
+    // Fetch all data after DOM is ready
+    fetchUserData();
+    fetchProjectsData();
 });
+
+
+// form validation:
+// - Email isn't empty
+// - Message isn't empty
+// - Email is a valid email address
+// - There are no special characters used in the email address
+// - There are no special characters used in the message
+// - The message is no longer than 300 characters
+// - Also... show a live count of the number of characters in the text area
+// - illegal characters = /[^a-zA-Z0-9@._-]/
+// - valid email address = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
