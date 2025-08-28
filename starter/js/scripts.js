@@ -50,8 +50,11 @@ async function fetchProjectsData() {
 
         projectsData.forEach(project => {
             // Normalize images
-            const cardImage = project.card_image ?? project.spotlight_image ?? "../images/default_card.webp";
-            const spotlightImage = project.spotlight_image ?? cardImage;
+            //const cardImage = project.card_image ?? project.spotlight_image ?? "../images/card_placeholder_bg.webp";
+            //const spotlightImage = project.spotlight_image ?? cardImage ?? "../images/spotlight_placeholder_bg.webp";
+            // changed to match the project readme, I honestly prefer the above even if the spotlight image looks a bit pixelated, at least it matches the card.
+            const cardImage = project.card_image ?? "../images/card_placeholder_bg.webp";
+            const spotlightImage = project.spotlight_image ?? "../images/spotlight_placeholder_bg.webp";
 
             // Short description
             let shortDesc = project.short_description;
