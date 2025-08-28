@@ -74,10 +74,11 @@ async function fetchProjectsData() {
                 background-size: cover;
                 scroll-snap-align: start;
             `;
-            projectCard.innerHTML = `
-                <h4>${project.project_name}</h4>
-                <p>${shortDesc}</p>
-            `;
+            const projectCardH4 = document.createElement('h4');
+            projectCardH4.textContent = `${project.project_name}`;
+            const projectCardP = document.createElement('p');
+            projectCardP.textContent = `${shortDesc}`;
+            projectCard.append(projectCardH4, projectCardP);
             projectsContainer.appendChild(projectCard);
 
             // Push into projectsArray
@@ -138,6 +139,15 @@ function populateSpotlight(project_id) {
     spotlightTitles.appendChild(spotlightTitlesH3);
     spotlightTitles.appendChild(spotlightText);
     spotlightTitles.appendChild(spotlightLink);
+
+    // // Highlight active project card
+    // document.querySelectorAll('.projectCard').forEach(card => {
+    //     if (card.id === project.project_id) {
+    //         card.classList.add('highlight');
+    //     } else {
+    //         card.classList.remove('highlight');
+    //     }
+    // });
 }
 
 
@@ -165,6 +175,28 @@ document.addEventListener("DOMContentLoaded", () => {
     // Fetch all data after DOM is ready
     fetchUserData();
     fetchProjectsData();
+
+    // Submit handler
+    form.addEventListener('submit', (e) => {
+        e.preventDefault(); // prevent actual submission
+
+        if (validateForm()) {
+            processFormSuccess();        
+            // Clear inputs
+            emailInput.value = "";
+            messageInput.value = "";
+            charactersLeft.textContent = `Characters: 0/${maxMessageLength}`;
+
+            // Reset any error styles just in case
+            emailInput.style.borderColor = "";
+            messageInput.style.borderColor = "";
+            emailLabel.style.color = "";
+            messageLabel.style.color = "";
+            emailError.textContent = "";
+            messageError.textContent = ""; 
+        }
+    });
+
 });
 
 
@@ -179,3 +211,98 @@ document.addEventListener("DOMContentLoaded", () => {
 // - illegal characters = /[^a-zA-Z0-9@._-]/
 // - valid email address = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
+const form = document.getElementById('formSection');
+const emailInput = document.getElementById('contactEmail');
+const messageInput = document.getElementById('contactMessage');
+const emailError = document.getElementById('emailError');
+const messageError = document.getElementById('messageError');
+const charactersLeft = document.getElementById('charactersLeft');
+const emailLabel = emailInput.previousElementSibling;
+const messageContainer = charactersLeft.parentElement;
+const messageLabel = messageContainer.previousElementSibling;
+
+//const illegalChars = /[^a-zA-Z0-9@._-]/;
+const illegalChars = /[^a-zA-Z0-9@._\- ]/; // provided regex wasn't allowing spaces, pretty annoying for a textarea
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const maxMessageLength = 300;
+
+// event handler to keep the character count
+messageInput.addEventListener('input', () => {
+    const length = messageInput.value.length;
+    charactersLeft.textContent = `Characters: ${length}/${maxMessageLength}`; // change the number as it inputs
+});
+
+function validateForm() {
+    let isValid = true;
+    // Reset previous error states
+    emailError.textContent = "";
+    messageError.textContent = "";
+    emailInput.style.borderColor = "";
+    messageInput.style.borderColor = "";
+    emailLabel.style.color = "";
+    messageLabel.style.color = "";
+    const removeFormSuccess = document.getElementById('formSuccess');
+    console.log(removeFormSuccess);
+    if (removeFormSuccess) {
+        removeFormSuccess.remove();
+    }
+
+    const emailValue = emailInput.value.trim();
+    const messageValue = messageInput.value.trim();
+
+    // Email validations
+    if (emailValue === "") {
+        emailError.textContent = "Email cannot be empty.";
+        emailInput.style.borderColor = "red";
+        emailLabel.style.color = "red";
+        isValid = false;
+    } else if (!emailRegex.test(emailValue)) {
+        emailError.textContent = "Email must be a valid address.";
+        emailInput.style.borderColor = "red";
+        emailLabel.style.color = "red";
+        isValid = false;
+    } else if (illegalChars.test(emailValue)) {
+        emailError.textContent = "Email contains invalid characters.";
+        emailInput.style.borderColor = "red";
+        emailLabel.style.color = "red";
+        isValid = false;
+    }
+
+    // Message validations
+    if (messageValue === "") {
+        messageError.textContent = "Message cannot be empty.";
+        messageInput.style.borderColor = "red";
+        messageLabel.style.color = "red";
+        isValid = false;
+    } else if (illegalChars.test(messageValue)) {
+        messageError.textContent = "Message contains invalid characters.";
+        messageInput.style.borderColor = "red";
+        messageLabel.style.color = "red";
+        isValid = false;
+    } else if (messageValue.length > maxMessageLength) {
+        messageError.textContent = `Message cannot exceed ${maxMessageLength} characters.`;
+        messageInput.style.borderColor = "red";
+        messageLabel.style.color = "red";
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+function processFormSuccess() {
+    const formSection = document.getElementById('formSection');
+    const formSuccess = document.createElement('div');
+    formSuccess.setAttribute('id', 'formSuccess');
+    formSuccess.style.cssText = `
+                width: 100%;
+                background-color: beige;
+                padding: 5px 0;
+                color: darkgreen;
+                font-weight: bold;
+            `;
+    formSuccess.textContent = "Your form has been sent, thank you!";
+    formSection.prepend(formSuccess);
+    setTimeout(() => {
+        formSection.removeChild(formSuccess);
+    }, 5000);
+}
